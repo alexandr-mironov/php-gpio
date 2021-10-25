@@ -1,0 +1,26 @@
+{
+  "name": "alexandr-mironov/php-gpio",
+  "description": "PHP library to manage GPIO on single-board computers (like OrangePi, BananaPi, RaspberryPi)",
+  "keywords": ["gpio", "raspberrypi", "single-board"],
+  "homepage": "https://github.com/alexandr-mironov/php-gpio",
+  "type": "library",
+  "license": "LGPL",
+  "authors": [
+    {
+      "name": "Alexandr Mironov",
+      "email": "alex@hyptrex.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "ext-sockets": "*",
+    "ext-mbstring": "*"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Gpio\\":   "src/"
+    }
+  }
+}
