@@ -3,7 +3,7 @@
 namespace Gpio;
 
 use Gpio\Board\BoardInterface;
-use Gpio\Board\DefaultBoard;
+use Gpio\Board\SampleBoard;
 use Gpio\Pin\PinInterface;
 
 class Gpio
@@ -16,7 +16,7 @@ class Gpio
     public function __construct(?BoardInterface $board = null)
     {
         if (is_null($board)) {
-            $board = new DefaultBoard();
+            $board = new SampleBoard();
         }
         $this->board = $board;
     }

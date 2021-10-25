@@ -7,5 +7,5 @@ interface PinInterface
     public const DIRECTION_OUT = 'out';
     public const DIRECTION_IN = 'in';
 
-    public function export();
+//    public function export(int $number);
 }
