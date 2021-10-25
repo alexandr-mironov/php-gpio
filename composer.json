@@ -4,7 +4,7 @@
   "keywords": ["gpio", "raspberrypi", "single-board"],
   "homepage": "https://github.com/alexandr-mironov/php-gpio",
   "type": "library",
-  "license": "LGPL",
+  "license": "GPL-3.0-or-later",
   "authors": [
     {
       "name": "Alexandr Mironov",
