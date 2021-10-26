@@ -18,11 +18,17 @@ abstract class AbstractPin implements PinInterface
 
     private $pathPrefix;
 
+    /**
+     * @var BoardInterface
+     */
+    private $board;
+
     public function __construct(
         BoardInterface $board,
         int $number
     ){
         $this->number = $number;
+        $this->board = $board;
         $this->pathPrefix = $board->getPath() . $board->getGpioPrefix() . $number;
         if (!file_exists($this->pathPrefix)) {
             $this->export($number);
@@ -32,7 +38,7 @@ abstract class AbstractPin implements PinInterface
 
     protected function export(int $number)
     {
-        $exportDescriptor = new SplFileObject($board->getPath() . 'export');
+        $exportDescriptor = new SplFileObject($this->board->getPath() . 'export');
         if ($exportDescriptor->fwrite((string)$number)) {
 
         }

@@ -4,6 +4,8 @@ namespace Gpio;
 
 use Gpio\Board\BoardInterface;
 use Gpio\Board\SampleBoard;
+use Gpio\Pin\InputPin;
+use Gpio\Pin\OutputPin;
 use Gpio\Pin\PinInterface;
 
 class Gpio
@@ -23,21 +25,16 @@ class Gpio
 
     public function getOutputPin(int $number): PinInterface
     {
-
+        return new OutputPin($this->board, $number);
     }
 
     public function getInputPin(int $number): PinInterface
     {
-
+        return new InputPin($this->board, $number);
     }
 
     public function setValue(PinInterface $pin, $value)
     {
-
-    }
-
-    public function getPin(int $number, string $mode): PinInterface
-    {
-
+        $pin->setValue($value);
     }
 }
