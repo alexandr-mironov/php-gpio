@@ -10,4 +10,9 @@ class OutputPin extends AbstractPin
     {
         parent::__construct($board, self::DIRECTION_OUT, $number);
     }
+
+    public function setValue($value)
+    {
+        $this->valueDescriptor->fwrite($value);
+    }
 }

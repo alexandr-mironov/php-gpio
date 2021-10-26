@@ -11,6 +11,11 @@ abstract class AbstractPin implements PinInterface
     public const FILE_DIRECTION = 'direction';
     public const FILE_VALUE = 'value';
 
+    private const MODE_MAP = [
+        self::DIRECTION_IN => 'r',
+        self::DIRECTION_OUT => 'w',
+    ];
+
     /** @var SplFileObject|null $directionDescriptor  */
     protected $directionDescriptor = null;
 
@@ -49,33 +54,27 @@ abstract class AbstractPin implements PinInterface
         if (!($this->targetPath = $gpioFile->getLinkTarget())) {
             throw new GpioException('Unable to read file link');
         }
+        if (!array_key_exists($direction, self::MODE_MAP)) {
+            throw new GpioException('Unavailable direction provided');
+        }
+        $this->directionDescriptor = new SplFileObject($this->targetPath . DIRECTORY_SEPARATOR . self::FILE_DIRECTION, 'w');
+        $this->directionDescriptor->fwrite($direction);
+        $this->valueDescriptor = new SplFileObject($this->targetPath . DIRECTORY_SEPARATOR . self::FILE_VALUE, self::MODE_MAP[$direction]);
     }
 
     protected function export(int $number)
     {
-        $exportDescriptor = new SplFileObject($this->board->getPath() . 'export');
-        if ($exportDescriptor->fwrite((string)$number)) {
-
+        $exportFile = new SplFileObject($this->board->getPath() . 'export', 'w');
+        if (!$exportFile->fwrite((string)$number)) {
+            throw new GpioException('Unable to export GPIO #' . $number);
         }
     }
 
     protected function unexport(int $number)
     {
-
-    }
-
-    public function setValue($value)
-    {
-        $this->valueDescriptor->fwrite($value);
-    }
-
-    private function hasDescriptor(string $descriptorName): bool
-    {
-
-    }
-
-    private function createDescriptor(string $descriptorName)
-    {
-
+        $exportFile = new SplFileObject($this->board->getPath() . 'unexport', 'w');
+        if (!$exportFile->fwrite((string)$number)) {
+            throw new GpioException('Unable to export GPIO #' . $number);
+        }
     }
 }

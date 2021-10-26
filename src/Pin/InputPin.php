@@ -10,4 +10,9 @@ class InputPin extends AbstractPin
     {
         parent::__construct($board, self::DIRECTION_IN, $number);
     }
+
+    public function getValue()
+    {
+        return $this->valueDescriptor->fread();
+    }
 }
