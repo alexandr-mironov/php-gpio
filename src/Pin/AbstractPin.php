@@ -50,30 +50,32 @@ abstract class AbstractPin implements PinInterface
         if (!file_exists($this->pathPrefix)) {
             $this->export($number);
         }
-        $gpioFile = new SplFileObject($this->pathPrefix);
-        if (!($this->targetPath = $gpioFile->getLinkTarget())) {
-            throw new GpioException('Unable to read file link');
+        if (is_link($this->pathPrefix)) {
+            $this->targetPath = readlink($this->pathPrefix);
         }
         if (!array_key_exists($direction, self::MODE_MAP)) {
             throw new GpioException('Unavailable direction provided');
         }
-        $this->directionDescriptor = new SplFileObject($this->targetPath . DIRECTORY_SEPARATOR . self::FILE_DIRECTION, 'w');
-        $this->directionDescriptor->fwrite($direction);
-        $this->valueDescriptor = new SplFileObject($this->targetPath . DIRECTORY_SEPARATOR . self::FILE_VALUE, self::MODE_MAP[$direction]);
+        if (!file_exists($this->targetPath . DIRECTORY_SEPARATOR . self::FILE_DIRECTION)) {
+            throw new GpioException('Unable to locate direction file');
+        }
+        $this->directionDescriptor = fopen($this->targetPath . DIRECTORY_SEPARATOR . self::FILE_DIRECTION, 'w');
+        fwrite($this->directionDescriptor, $direction);
+        $this->valueDescriptor = fopen($this->targetPath . DIRECTORY_SEPARATOR . self::FILE_VALUE, self::MODE_MAP[$direction]);
     }
 
     protected function export(int $number)
     {
-        $exportFile = new SplFileObject($this->board->getPath() . 'export', 'w');
-        if (!$exportFile->fwrite((string)$number)) {
+        $exportFile = fopen($this->board->getPath() . 'export', 'w');
+        if (!fwrite($exportFile, (string)$number)) {
             throw new GpioException('Unable to export GPIO #' . $number);
         }
     }
 
     protected function unexport(int $number)
     {
-        $exportFile = new SplFileObject($this->board->getPath() . 'unexport', 'w');
-        if (!$exportFile->fwrite((string)$number)) {
+        $exportFile = fopen($this->board->getPath() . 'unexport', 'w');
+        if (!fwrite($exportFile, (string)$number)) {
             throw new GpioException('Unable to export GPIO #' . $number);
         }
     }

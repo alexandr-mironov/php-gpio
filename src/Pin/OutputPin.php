@@ -13,6 +13,6 @@ class OutputPin extends AbstractPin
 
     public function setValue($value)
     {
-        $this->valueDescriptor->fwrite($value);
+        fwrite($this->valueDescriptor, $value);
     }
 }
