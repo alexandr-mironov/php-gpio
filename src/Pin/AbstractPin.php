@@ -57,6 +57,8 @@ abstract class AbstractPin implements PinInterface
             throw new GpioException('Unavailable direction provided');
         }
         //debug
+        echo "path + symlink: " . $this->pathPrefix . readlink($this->pathPrefix) . PHP_EOL;
+        echo "real path: " . realpath($this->pathPrefix . readlink($this->pathPrefix)) . PHP_EOL;
         echo "target path: " . $this->targetPath . PHP_EOL;
         echo "directory file path: " . $this->targetPath . DIRECTORY_SEPARATOR . self::FILE_DIRECTION . PHP_EOL;
         if (!file_exists($this->targetPath . DIRECTORY_SEPARATOR . self::FILE_DIRECTION)) {
