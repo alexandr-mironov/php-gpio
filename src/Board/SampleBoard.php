@@ -4,8 +4,8 @@ namespace Gpio\Board;
 
 class SampleBoard implements BoardInterface
 {
-    public const PATH = '/sys/class/gpio/';
-    public const GPIO_PREFIX = 'gpio';
+    public const PATH = "/sys/class/gpio/";
+    public const GPIO_PREFIX = "gpio";
 
     public function __construct()
     {
