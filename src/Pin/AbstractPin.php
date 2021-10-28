@@ -51,7 +51,7 @@ abstract class AbstractPin implements PinInterface
             $this->export($number);
         }
         if (is_link($this->pathPrefix)) {
-            $this->targetPath = readlink($this->pathPrefix);
+            $this->targetPath = realpath($this->pathPrefix . readlink($this->pathPrefix));
         }
         if (!array_key_exists($direction, self::MODE_MAP)) {
             throw new GpioException('Unavailable direction provided');
