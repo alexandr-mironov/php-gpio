@@ -38,6 +38,13 @@ abstract class AbstractPin implements PinInterface
      */
     private $board;
 
+    /**
+     * @param BoardInterface $board
+     * @param string $direction
+     * @param int $number
+     *
+     * @throws GpioException
+     */
     protected function __construct(
         BoardInterface $board,
         string $direction,
@@ -51,14 +58,14 @@ abstract class AbstractPin implements PinInterface
             $this->export($number);
         }
         if (is_link($this->pathPrefix)) {
-            $this->targetPath = realpath($this->pathPrefix . readlink($this->pathPrefix));
+            $this->targetPath = $this->getRealPath();
         }
         if (!array_key_exists($direction, self::MODE_MAP)) {
             throw new GpioException('Unavailable direction provided');
         }
         //debug
         echo "path + symlink: " . $this->pathPrefix . readlink($this->pathPrefix) . PHP_EOL;
-        echo "real path: " . realpath($this->pathPrefix . readlink($this->pathPrefix)) . PHP_EOL;
+        echo "real path: " . $this->getRealPath() . PHP_EOL;
         echo "target path: " . $this->targetPath . PHP_EOL;
         echo "directory file path: " . $this->targetPath . DIRECTORY_SEPARATOR . self::FILE_DIRECTION . PHP_EOL;
         if (!file_exists($this->targetPath . DIRECTORY_SEPARATOR . self::FILE_DIRECTION)) {
@@ -69,6 +76,10 @@ abstract class AbstractPin implements PinInterface
         $this->valueDescriptor = fopen($this->targetPath . DIRECTORY_SEPARATOR . self::FILE_VALUE, self::MODE_MAP[$direction]);
     }
 
+    /**
+     * @param int $number
+     * @throws GpioException
+     */
     protected function export(int $number)
     {
         $exportFile = fopen($this->board->getPath() . 'export', 'w');
@@ -77,11 +88,31 @@ abstract class AbstractPin implements PinInterface
         }
     }
 
+    /**
+     * @param int $number
+     * @throws GpioException
+     */
     protected function unexport(int $number)
     {
         $exportFile = fopen($this->board->getPath() . 'unexport', 'w');
         if (!fwrite($exportFile, (string)$number)) {
             throw new GpioException('Unable to export GPIO #' . $number);
         }
+    }
+
+    /**
+     * @return string
+     * @throws GpioException
+     */
+    private function getRealPath(): string
+    {
+        if (!$this->pathPrefix) {
+            throw new GpioException('Invalid path prefix');
+        }
+        $realPath = realpath($this->pathPrefix . DIRECTORY_SEPARATOR . readlink($this->pathPrefix));
+        if (!$realPath) {
+            throw new GpioException('Invalid real path');
+        }
+        return $realPath;
     }
 }
