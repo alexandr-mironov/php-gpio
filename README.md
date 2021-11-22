@@ -10,8 +10,8 @@ don't forget to properly set your volumes:
       - "phpsocket:/var/run"
       - "/sys/:/sys/:rw"
     
-##Usage example
-###GPIO service (simplefied)
+## Usage example
+### GPIO service (simplefied)
     
 ```php
 <?php
