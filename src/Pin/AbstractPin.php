@@ -4,7 +4,6 @@ namespace Gpio\Pin;
 
 use Gpio\Board\BoardInterface;
 use Gpio\Exception\GpioException;
-use SplFileObject;
 
 abstract class AbstractPin implements PinInterface
 {
@@ -16,22 +15,22 @@ abstract class AbstractPin implements PinInterface
         self::DIRECTION_OUT => 'w',
     ];
 
-    /** @var SplFileObject|null $directionDescriptor  */
+    /** @var ?resource $directionDescriptor */
     protected $directionDescriptor = null;
 
-    /** @var SplFileObject|null $valueDescriptor */
+    /** @var ?resource $valueDescriptor */
     protected $valueDescriptor = null;
 
     /** @var int $number */
     protected $number;
 
-    /** @var string  */
+    /** @var string */
     private $pathPrefix;
 
-    /** @var string  */
+    /** @var string */
     private $targetPath;
 
-    /** @var string  */
+    /** @var string */
     protected $direction;
 
     /**
@@ -48,9 +47,10 @@ abstract class AbstractPin implements PinInterface
      */
     protected function __construct(
         BoardInterface $board,
-        string $direction,
-        int $number
-    ){
+        string         $direction,
+        int            $number
+    )
+    {
         $this->number = $number;
         $this->board = $board;
         $this->direction = $direction;
@@ -65,10 +65,17 @@ abstract class AbstractPin implements PinInterface
             throw new GpioException('Unavailable direction provided');
         }
 
-        if (!file_exists($this->targetPath . DIRECTORY_SEPARATOR . self::FILE_DIRECTION)) {
+        $directionPath = $this->targetPath . DIRECTORY_SEPARATOR . self::FILE_DIRECTION;
+
+        if (!file_exists($directionPath)) {
             throw new GpioException('Unable to locate direction file');
         }
-        $this->directionDescriptor = fopen($this->targetPath . DIRECTORY_SEPARATOR . self::FILE_DIRECTION, 'w');
+
+        $this->directionDescriptor = fopen($directionPath, 'w');
+        if (!$this->directionDescriptor) {
+            throw new GpioException('Unable to open direction descriptor with path: ' . $directionPath);
+        }
+
         fwrite($this->directionDescriptor, $direction);
         $this->valueDescriptor = fopen($this->targetPath . DIRECTORY_SEPARATOR . self::FILE_VALUE, self::MODE_MAP[$direction]);
     }
