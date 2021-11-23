@@ -3,6 +3,7 @@
 namespace Gpio\Pin;
 
 use Gpio\Board\BoardInterface;
+use Gpio\Exception\GpioException;
 
 class InputPin extends AbstractPin
 {
@@ -11,8 +12,16 @@ class InputPin extends AbstractPin
         parent::__construct($board, self::DIRECTION_IN, $number);
     }
 
-    public function getValue()
+    /**
+     * @return false|string
+     * @throws GpioException
+     */
+    public function getValue(): int
     {
-        return $this->valueDescriptor->fread();
+        if (!$this->valueDescriptor) {
+            throw new GpioException('Input pin value descriptor is empty');
+        }
+        rewind($this->valueDescriptor);
+        return (int)fread($this->valueDescriptor, filesize($this->valueDescriptor));
     }
 }
