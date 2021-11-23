@@ -23,17 +23,33 @@ class Gpio
         $this->board = $board;
     }
 
-    public function getOutputPin(int $number): PinInterface
+    /**
+     * @param int $number
+     *
+     * @return OutputPin
+     * @throws Exception\GpioException
+     */
+    public function getOutputPin(int $number): OutputPin
     {
         return new OutputPin($this->board, $number);
     }
 
-    public function getInputPin(int $number): PinInterface
+    /**
+     * @param int $number
+     *
+     * @return InputPin
+     * @throws Exception\GpioException
+     */
+    public function getInputPin(int $number): InputPin
     {
         return new InputPin($this->board, $number);
     }
 
-    public function setValue(PinInterface $pin, $value)
+    /**
+     * @param OutputPin $pin
+     * @param $value
+     */
+    public function setValue(OutputPin $pin, $value)
     {
         $pin->setValue($value);
     }
