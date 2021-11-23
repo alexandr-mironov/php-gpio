@@ -12,16 +12,27 @@ class SampleBoard implements BoardInterface
 
     }
 
+    /**
+     * @return string
+     */
     public function getPath(): string
     {
         return self::PATH;
     }
 
+    /**
+     * @param int $number
+     *
+     * @return bool
+     */
     public function hasPin(int $number): bool
     {
         return true;
     }
 
+    /**
+     * @return string
+     */
     public function getGpioPrefix(): string
     {
         return self::GPIO_PREFIX;
