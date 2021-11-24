@@ -7,13 +7,19 @@ use Gpio\Exception\GpioException;
 
 class InputPin extends AbstractPin
 {
+    /**
+     * @param BoardInterface $board
+     * @param int $number
+     * 
+     * @throws GpioException
+     */
     public function __construct(BoardInterface $board, int $number)
     {
         parent::__construct($board, self::DIRECTION_IN, $number);
     }
 
     /**
-     * @return false|string
+     * @return int
      * @throws GpioException
      */
     public function getValue(): int

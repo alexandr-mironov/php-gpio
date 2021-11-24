@@ -6,7 +6,6 @@ use Gpio\Board\BoardInterface;
 use Gpio\Board\SampleBoard;
 use Gpio\Pin\InputPin;
 use Gpio\Pin\OutputPin;
-use Gpio\Pin\PinInterface;
 
 class Gpio
 {
@@ -15,6 +14,9 @@ class Gpio
      */
     private $board;
 
+    /**
+     * @param BoardInterface|null $board
+     */
     public function __construct(?BoardInterface $board = null)
     {
         if (is_null($board)) {
