@@ -19,10 +19,7 @@ class Gpio
      */
     public function __construct(?BoardInterface $board = null)
     {
-        if (is_null($board)) {
-            $board = new SampleBoard();
-        }
-        $this->board = $board;
+        $this->board = $board ?? new SampleBoard();
     }
 
     /**

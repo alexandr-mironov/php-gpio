@@ -10,7 +10,7 @@ class InputPin extends AbstractPin
     /**
      * @param BoardInterface $board
      * @param int $number
-     * 
+     *
      * @throws GpioException
      */
     public function __construct(BoardInterface $board, int $number)
